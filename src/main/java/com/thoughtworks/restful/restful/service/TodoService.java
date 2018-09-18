@@ -29,13 +29,14 @@ public class TodoService {
     }
 
     public Todo saveOrUpdate(Todo toDo) {
-        if ("".equals(toDo.getId()) || toDo.getId() == null) {
+        if (toDo.getId() == null) {
             toDo.setId(UUID.randomUUID());
             todoList.add(toDo);
-        }
-        for (int i = 0; i < todoList.size(); i++) {
-            if (todoList.get(i).getId().equals(toDo.getId())) {
-                todoList.set(i, toDo);
+        } else {
+            for (int i = 0; i < todoList.size(); i++) {
+                if (todoList.get(i).getId().equals(toDo.getId())) {
+                    todoList.set(i, toDo);
+                }
             }
         }
         return toDo;
