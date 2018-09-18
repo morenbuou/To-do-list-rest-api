@@ -25,7 +25,7 @@ public class TodoService {
     }
 
     public Todo getTodoById(UUID id) {
-        return todoList.stream().filter(n -> n.getId().equals(id)).findFirst().get();
+        return todoList.stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
 
     public Todo saveOrUpdate(Todo toDo) {
