@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Date;
+import java.util.HashSet;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -49,7 +50,7 @@ public class TodoListControllerTest {
 
     @Test
     public void getTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         given(toDoService.getTodoById(todoNew.getId())).willReturn(todoNew);
 
@@ -62,7 +63,7 @@ public class TodoListControllerTest {
 
     @Test
     public void addTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         given(toDoService.saveOrUpdate(any())).willReturn(todoNew);
 
@@ -78,7 +79,7 @@ public class TodoListControllerTest {
 
     @Test
     public void updateTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         given(toDoService.getTodoById(todoNew.getId())).willReturn(todoNew);
         given(toDoService.saveOrUpdate(todoNew)).willReturn(todoNew);
@@ -96,7 +97,7 @@ public class TodoListControllerTest {
 
     @Test
     public void test_update_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 
@@ -112,7 +113,7 @@ public class TodoListControllerTest {
 
     @Test
     public void deleteTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(todoNew);
         doNothing().when(toDoService).delete(todoNew.getId());
@@ -128,7 +129,7 @@ public class TodoListControllerTest {
 
     @Test
     public void test_delete_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 

@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Data
@@ -23,5 +23,11 @@ public class Todo {
     private String name;
     private String status;
     private Date date;
+
+    @ManyToMany
+    @JoinTable(name = "todo_tag",
+            joinColumns = @JoinColumn(name = "todo_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
 
 }

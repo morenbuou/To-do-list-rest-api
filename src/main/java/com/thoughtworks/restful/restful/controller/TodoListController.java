@@ -22,6 +22,12 @@ public class TodoListController {
         return toDoService.getTodoList(pageable);
     }
 
+    @GetMapping(value = "/page/{page}/pageSize/{pageSize}")
+    public Page<Todo> getTodoListPage(@PathVariable Integer page, @PathVariable Integer pageSize) {
+        Pageable pageable = new PageRequest(page - 1, pageSize);
+        return toDoService.getTodoPage(pageable);
+    }
+
     @GetMapping(value = "/{id}")
     public Todo getTodoById(@PathVariable(value = "id") Long id) {
         return toDoService.getTodoById(id);
@@ -46,12 +52,5 @@ public class TodoListController {
             throw new NotFoundException();
         }
         toDoService.delete(id);
-    }
-
-    @GetMapping(value = "/page/{page}/pageSize/{pageSize}")
-    public Page<Todo> getTodoListPage(@PathVariable Integer page, @PathVariable Integer pageSize) {
-        Pageable pageable = new PageRequest(page - 1, pageSize);
-        Page<Todo> result = toDoService.getTodoPage(pageable);
-        return result;
     }
 }
