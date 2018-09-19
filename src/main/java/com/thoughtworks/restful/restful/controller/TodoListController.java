@@ -10,6 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.List;
+
 @RestController
 @RequestMapping("/todos")
 public class TodoListController {
@@ -32,6 +35,16 @@ public class TodoListController {
     public Todo getTodoById(@PathVariable(value = "id") Long id) {
         return toDoService.getTodoById(id);
     }
+
+    @GetMapping(value = "/tagValue/{tagValue}")
+    public List<Todo> getTodoByTagValue(@PathVariable(value = "tagValue") String value) {
+        return toDoService.getByTodoTagValue(value);
+    }
+
+//    @PostMapping(value = "/tags")
+//    public List<Todo> getTodoByTags(@RequestBody List<String> values) {
+//        return toDoService.getByTodoTagIn(new HashSet<>(values));
+//    }
 
     @PostMapping
     public Todo addTodo(@RequestBody Todo todo) {
