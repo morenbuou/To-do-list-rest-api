@@ -1,23 +1,26 @@
 package com.thoughtworks.restful.restful.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Todo {
 
-    @JsonProperty
-    private UUID id;
+    @Id
+    @GeneratedValue
+    private Long id;
     private String name;
     private String status;
-
     private Date date;
+    private String tags;
 
 }

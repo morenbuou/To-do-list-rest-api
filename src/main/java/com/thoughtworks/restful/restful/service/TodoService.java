@@ -1,53 +1,43 @@
 package com.thoughtworks.restful.restful.service;
 
 import com.thoughtworks.restful.restful.model.Todo;
+import com.thoughtworks.restful.restful.repository.TodoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TodoService {
 
-    private List<Todo> todoList = new ArrayList<>();
+    @Autowired
+    TodoRepository todoRepository;
 
-    public TodoService() {
-        todoList.add(new Todo(UUID.randomUUID(), "meeting", "To Do", new Date()));
-        todoList.add(new Todo(UUID.randomUUID(), "meeting with LY", "To Do", new Date()));
-        todoList.add(new Todo(UUID.randomUUID(), "learn", "In progress", new Date()));
-        todoList.add(new Todo(UUID.randomUUID(), "preparation", "Finished", new Date()));
+    public Page<Todo> getTodoList(Pageable pageable) {
+        return todoRepository.findAll(pageable);
     }
 
-    public List<Todo> getTodoList() {
-        return todoList;
+    public Todo getTodoById(Long id) {
+        return todoRepository.findOne(id);
     }
 
-    public Todo getTodoById(UUID id) {
-        return todoList.stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
+    public Todo save(Todo toDo) {
+        return todoRepository.save(toDo);
+    }
+
+    public Todo update(Todo toDo) {
+        return todoRepository.exists(toDo.getId()) ? todoRepository.save(toDo) : null;
     }
 
     public Todo saveOrUpdate(Todo toDo) {
-        if (toDo.getId() == null) {
-            toDo.setId(UUID.randomUUID());
-            todoList.add(toDo);
-        } else {
-            for (int i = 0; i < todoList.size(); i++) {
-                if (todoList.get(i).getId().equals(toDo.getId())) {
-                    todoList.set(i, toDo);
-                }
-            }
-        }
-        return toDo;
+        return todoRepository.save(toDo);
     }
 
-    public void delete(UUID id) {
-        for (int i = 0; i < todoList.size(); i++) {
-            if (todoList.get(i).getId().equals(id)) {
-                todoList.remove(i);
-            }
-        }
+    public void delete(Long id) {
+        todoRepository.delete(id);
     }
 
+    public Page<Todo> getTodoPage(Pageable pageable) {
+        return todoRepository.findAll(pageable);
+    }
 }

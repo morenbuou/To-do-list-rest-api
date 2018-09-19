@@ -5,10 +5,10 @@ import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/todos")
@@ -18,12 +18,12 @@ public class TodoListController {
     TodoService toDoService;
 
     @GetMapping
-    public List<Todo> getTodoList() {
-        return toDoService.getTodoList();
+    public Page<Todo> getTodoList(Pageable pageable) {
+        return toDoService.getTodoList(pageable);
     }
 
     @GetMapping(value = "/{id}")
-    public Todo getTodoById(@PathVariable(value = "id") UUID id) {
+    public Todo getTodoById(@PathVariable(value = "id") Long id) {
         return toDoService.getTodoById(id);
     }
 
@@ -41,10 +41,17 @@ public class TodoListController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteTodoById(@PathVariable(value = "id") UUID id) throws NotFoundException {
+    public void deleteTodoById(@PathVariable(value = "id") Long id) throws NotFoundException {
         if (toDoService.getTodoById(id) == null) {
             throw new NotFoundException();
         }
         toDoService.delete(id);
+    }
+
+    @GetMapping(value = "/page/{page}/pageSize/{pageSize}")
+    public Page<Todo> getTodoListPage(@PathVariable Integer page, @PathVariable Integer pageSize) {
+        Pageable pageable = new PageRequest(page - 1, pageSize);
+        Page<Todo> result = toDoService.getTodoPage(pageable);
+        return result;
     }
 }
