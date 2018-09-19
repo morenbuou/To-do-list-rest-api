@@ -68,13 +68,14 @@ public class TodoListControllerTest {
     public void addTodo() throws Exception {
         Todo todoNew = new Todo(UUID.randomUUID(), "todoNew", "to do", new Date());
 
-        given(toDoService.saveOrUpdate(todoNew)).willReturn(todoNew);
+        given(toDoService.saveOrUpdate(any())).willReturn(todoNew);
 
         mvc.perform(
                 post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(todoNew)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("todoNew"));
         verify(toDoService, times(1)).saveOrUpdate(todoNew);
         verifyNoMoreInteractions(toDoService);
     }
