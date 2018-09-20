@@ -3,6 +3,7 @@ package com.thoughtworks.restful.restful.controller;
 
 import com.thoughtworks.restful.restful.controller.Exception.ForbiddenException;
 import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
+import com.thoughtworks.restful.restful.model.TagCriteria;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.LoginService;
@@ -30,6 +31,12 @@ public class TodoListController {
         return toDoService.getTodoListByUserId(user.getId(), pageable);
     }
 
+    @PostMapping(value = "/query")
+    public List<Todo> getTodoListByCriteria(@RequestBody TagCriteria tagCriteria) {
+        User user = getPrincipal();
+        return toDoService.getTodoListByTagsAndDate(tagCriteria, user.getId());
+    }
+
     @GetMapping(value = "/{id}")
     public Todo getTodoById(@PathVariable(value = "id") Long id) throws ForbiddenException {
         User user = getPrincipal();
@@ -43,7 +50,7 @@ public class TodoListController {
     @GetMapping(value = "/tagValue/{tagValue}")
     public List<Todo> getTodoByTagValue(@PathVariable(value = "tagValue") String value) {
         User user = getPrincipal();
-        return toDoService.getByTodoTagValue(user.getId(), value);
+        return toDoService.getTodoListByTodoTagValue(user.getId(), value);
     }
 
     @PostMapping
