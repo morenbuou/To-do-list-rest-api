@@ -1,0 +1,1 @@
+ALTER TABLE tag ADD user_id INT;

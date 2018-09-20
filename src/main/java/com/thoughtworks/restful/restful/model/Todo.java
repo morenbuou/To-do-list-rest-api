@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Todo {
 
     @Id
@@ -22,6 +25,8 @@ public class Todo {
     private Long id;
     private String name;
     private String status;
+
+    @CreatedDate
     private Date date;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -29,5 +34,8 @@ public class Todo {
             joinColumns = @JoinColumn(name = "todo_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
+
+    @ManyToOne
+    private User user;
 
 }

@@ -8,20 +8,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-public class Tag {
+public class User {
     @Id
     @GeneratedValue
-    private long id;
-    private String label;
-    private String value;
-
-    @ManyToOne
-    private User user;
+    private Long id;
+    private String username;
+    private String password;
 }

@@ -41,10 +41,10 @@ public class TodoListController {
         return toDoService.getByTodoTagValue(value);
     }
 
-//    @PostMapping(value = "/tags")
-//    public List<Todo> getTodoByTags(@RequestBody List<String> values) {
-//        return toDoService.getByTodoTagIn(new HashSet<>(values));
-//    }
+    @PostMapping(value = "/tags")
+    public List<Todo> getTodoByTags(@RequestBody List<String> values) {
+        return toDoService.getByTodoTagIn(new HashSet<>(values));
+    }
 
     @PostMapping
     public Todo addTodo(@RequestBody Todo todo) {
