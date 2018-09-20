@@ -1,6 +1,7 @@
 package com.thoughtworks.restful.restful.controller;
 
 
+import com.thoughtworks.restful.restful.controller.Exception.ForbiddenException;
 import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.model.User;
@@ -24,26 +25,30 @@ public class TodoListController {
     LoginService loginService;
 
     @GetMapping
-    public List<Todo> getTodoListByUser(Pageable pageable) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return toDoService.getTodoListByUser(user, pageable);
+    public List<Todo> getTodoListByUserId(Pageable pageable) {
+        User user = getPrincipal();
+        return toDoService.getTodoListByUserId(user.getId(), pageable);
     }
 
     @GetMapping(value = "/{id}")
-    public Todo getTodoById(@PathVariable(value = "id") Long id) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return toDoService.getTodoByUserAndId(user, id);
+    public Todo getTodoById(@PathVariable(value = "id") Long id) throws ForbiddenException {
+        User user = getPrincipal();
+        Todo todo = toDoService.getTodoByUserIdAndId(user.getId(), id);
+        if (todo == null) {
+            throw new ForbiddenException();
+        }
+        return todo;
     }
 
     @GetMapping(value = "/tagValue/{tagValue}")
     public List<Todo> getTodoByTagValue(@PathVariable(value = "tagValue") String value) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return toDoService.getByTodoTagValue(user, value);
+        User user = getPrincipal();
+        return toDoService.getByTodoTagValue(user.getId(), value);
     }
 
     @PostMapping
     public Todo addTodo(@RequestBody Todo todo) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getPrincipal();
         todo.setUser(user);
         return toDoService.saveOrUpdate(todo);
     }
@@ -53,6 +58,8 @@ public class TodoListController {
         if (toDoService.getTodoById(todo.getId()) == null) {
             throw new NotFoundException();
         }
+        User user = getPrincipal();
+        todo.setUser(user);
         return toDoService.saveOrUpdate(todo);
     }
 
@@ -62,5 +69,9 @@ public class TodoListController {
             throw new NotFoundException();
         }
         toDoService.delete(id);
+    }
+
+    private User getPrincipal() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

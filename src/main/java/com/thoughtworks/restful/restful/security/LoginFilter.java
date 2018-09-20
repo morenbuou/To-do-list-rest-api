@@ -1,5 +1,6 @@
 package com.thoughtworks.restful.restful.security;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.LoginService;
@@ -25,16 +26,18 @@ public class LoginFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        User user = loginService.getUserByAuthentication(authorization);
-        if (user == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+        if (!Strings.isNullOrEmpty(authorization)) {
+            User user = loginService.getUserByAuthentication(authorization);
+            if (user == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(
+                            user, "", ImmutableList.of()
+                    )
+            );
         }
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        user, "", ImmutableList.of()
-                )
-        );
         filterChain.doFilter(request, response);
     }
 }

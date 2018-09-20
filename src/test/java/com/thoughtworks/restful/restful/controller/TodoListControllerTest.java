@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.TodoService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,7 +35,13 @@ public class TodoListControllerTest {
     @MockBean
     private TodoService toDoService;
 
-//    @Test
+    @Before
+    public void setUp() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(testUser.getLogin(), testUser.getPassword()));
+    }
+
+    //    @Test
 //    public void getTodoList() throws Exception {
 //        Todo todo = new Todo(1l, "wjh", "finished", new Date());
 //        Todo todoNew = new Todo(2l, "todoNew", "to do", new Date());

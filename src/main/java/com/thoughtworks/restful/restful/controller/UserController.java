@@ -7,6 +7,7 @@ import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
 import com.thoughtworks.restful.restful.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,18 +26,18 @@ public class UserController {
     TodoService todoService;
 
     @PostMapping(value = "/register")
-    public void registerUser(@RequestBody User user) throws ForbiddenException {
+    public ResponseEntity registerUser(@RequestBody User user) {
         User existUser = userService.getUserByName(user.getUsername());
-        if (existUser == null) {
-            throw new ForbiddenException();
+        if (existUser != null) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
         userService.createUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody User user) throws NotFoundException, ForbiddenException {
         String sessionId = doLogin(user);
-
         return ResponseEntity.ok().header("sessionId", sessionId).build();
     }
 
@@ -48,7 +49,7 @@ public class UserController {
         if (!existUser.getPassword().equals(user.getPassword())) {
             throw new ForbiddenException();
         }
-        return loginService.generateAuthentication(user);
+        return loginService.generateAuthentication(existUser);
     }
 
 }

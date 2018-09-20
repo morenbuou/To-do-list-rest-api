@@ -22,20 +22,20 @@ public class TodoService {
     @Autowired
     TagRepository tagRepository;
 
-    public List<Todo> getTodoListByUser(User user, Pageable pageable) {
-        return todoRepository.findByUser(user, pageable);
+    public List<Todo> getTodoListByUserId(Long id, Pageable pageable) {
+        return todoRepository.findByUser_Id(id, pageable);
     }
 
-    public Todo getTodoByUserAndId(User user, Long id) {
-        return todoRepository.findByIdAndUser_Id(user, id);
+    public Todo getTodoByUserIdAndId(Long userId, Long id) {
+        return todoRepository.findByUser_IdAndId(userId, id);
     }
 
     public Todo getTodoById(Long id) {
         return todoRepository.findOne(id);
     }
 
-    public List<Todo> getByTodoTagValue(User user, String value) {
-        return todoRepository.findByTags_ValueAndUser_Id(user, value);
+    public List<Todo> getByTodoTagValue(Long id, String value) {
+        return todoRepository.findByUser_IdAndTags_Value(id, value);
     }
 
     public Todo saveOrUpdate(Todo toDo) {
