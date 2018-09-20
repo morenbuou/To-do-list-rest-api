@@ -29,7 +29,11 @@ public class UserController {
     TodoService todoService;
 
     @PostMapping(value = "/register")
-    public void registerUser(@RequestBody User user) {
+    public void registerUser(@RequestBody User user) throws NotFoundException {
+        User existUser = userService.getUserByName(user.getUsername());
+        if (existUser != null) {
+            throw new NotFoundException();
+        }
         userService.createUser(user);
     }
 
