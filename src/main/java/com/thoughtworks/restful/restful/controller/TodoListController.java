@@ -3,6 +3,8 @@ package com.thoughtworks.restful.restful.controller;
 
 import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
 import com.thoughtworks.restful.restful.model.Todo;
+import com.thoughtworks.restful.restful.model.User;
+import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,9 +22,18 @@ public class TodoListController {
     @Autowired
     TodoService toDoService;
 
+    @Autowired
+    LoginService loginService;
+
+//    @GetMapping
+//    public Page<Todo> getTodoList(Pageable pageable) {
+//        return toDoService.getTodoList(pageable);
+//    }
+
     @GetMapping
-    public Page<Todo> getTodoList(Pageable pageable) {
-        return toDoService.getTodoList(pageable);
+    public List<Todo> getTodoListByUserId(@RequestHeader String sessionId) {
+        User user = loginService.getUserByAuthentication(sessionId);
+        return toDoService.getTodoListByUserId(user);
     }
 
     @GetMapping(value = "/page/{page}/pageSize/{pageSize}")
@@ -47,7 +58,9 @@ public class TodoListController {
     }
 
     @PostMapping
-    public Todo addTodo(@RequestBody Todo todo) {
+    public Todo addTodo(@RequestBody Todo todo, @RequestHeader String sessionId) {
+        User user = loginService.getUserByAuthentication(sessionId);
+        todo.setUser(user);
         return toDoService.saveOrUpdate(todo);
     }
 

@@ -2,6 +2,7 @@ package com.thoughtworks.restful.restful.service;
 
 import com.thoughtworks.restful.restful.model.Tag;
 import com.thoughtworks.restful.restful.model.Todo;
+import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.repository.TagRepository;
 import com.thoughtworks.restful.restful.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,9 @@ public class TodoService {
 
     public Page<Todo> getTodoPage(Pageable pageable) {
         return todoRepository.findAll(pageable);
+    }
+
+    public List<Todo> getTodoListByUserId(User user) {
+        return todoRepository.findByUser(user);
     }
 }
