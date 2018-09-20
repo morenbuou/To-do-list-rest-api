@@ -27,7 +27,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.flywaydb:flyway-core')
     compile('org.projectlombok:lombok')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile 'javax.xml.bind:jaxb-api:2.3.0'
+    compile group: 'com.google.guava', name: 'guava', version: 'r05'
     runtime('mysql:mysql-connector-java')
     testRuntime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')

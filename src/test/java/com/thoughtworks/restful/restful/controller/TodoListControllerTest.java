@@ -2,6 +2,7 @@ package com.thoughtworks.restful.restful.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.restful.restful.model.Todo;
+import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.TodoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +51,7 @@ public class TodoListControllerTest {
 
     @Test
     public void getTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         given(toDoService.getTodoById(todoNew.getId())).willReturn(todoNew);
 
@@ -63,7 +64,7 @@ public class TodoListControllerTest {
 
     @Test
     public void addTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         given(toDoService.saveOrUpdate(any())).willReturn(todoNew);
 
@@ -79,7 +80,7 @@ public class TodoListControllerTest {
 
     @Test
     public void updateTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         given(toDoService.getTodoById(todoNew.getId())).willReturn(todoNew);
         given(toDoService.saveOrUpdate(todoNew)).willReturn(todoNew);
@@ -97,7 +98,7 @@ public class TodoListControllerTest {
 
     @Test
     public void test_update_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 
@@ -113,7 +114,7 @@ public class TodoListControllerTest {
 
     @Test
     public void deleteTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(todoNew);
         doNothing().when(toDoService).delete(todoNew.getId());
@@ -129,7 +130,7 @@ public class TodoListControllerTest {
 
     @Test
     public void test_delete_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>());
+        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 

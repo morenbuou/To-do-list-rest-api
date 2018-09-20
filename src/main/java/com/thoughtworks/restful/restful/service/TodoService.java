@@ -6,7 +6,6 @@ import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.repository.TagRepository;
 import com.thoughtworks.restful.restful.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,28 +22,20 @@ public class TodoService {
     @Autowired
     TagRepository tagRepository;
 
-    public Page<Todo> getTodoList(Pageable pageable) {
-        return todoRepository.findAll(pageable);
+    public List<Todo> getTodoListByUser(User user, Pageable pageable) {
+        return todoRepository.findByUser(user, pageable);
+    }
+
+    public Todo getTodoByUserAndId(User user, Long id) {
+        return todoRepository.findByIdAndUser_Id(user, id);
     }
 
     public Todo getTodoById(Long id) {
         return todoRepository.findOne(id);
     }
 
-    public List<Todo> getByTodoTagValue(String value) {
-        return todoRepository.findByTags_Value(value);
-    }
-
-    public List<Todo> getByTodoTagIn(Set<String> values) {
-        return todoRepository.findByTags_ValueInOrderById(values);
-    }
-
-    public Todo save(Todo toDo) {
-        return todoRepository.save(toDo);
-    }
-
-    public Todo update(Todo toDo) {
-        return todoRepository.exists(toDo.getId()) ? todoRepository.save(toDo) : null;
+    public List<Todo> getByTodoTagValue(User user, String value) {
+        return todoRepository.findByTags_ValueAndUser_Id(user, value);
     }
 
     public Todo saveOrUpdate(Todo toDo) {
@@ -59,13 +50,5 @@ public class TodoService {
 
     public void delete(Long id) {
         todoRepository.delete(id);
-    }
-
-    public Page<Todo> getTodoPage(Pageable pageable) {
-        return todoRepository.findAll(pageable);
-    }
-
-    public List<Todo> getTodoListByUserId(User user) {
-        return todoRepository.findByUser(user);
     }
 }

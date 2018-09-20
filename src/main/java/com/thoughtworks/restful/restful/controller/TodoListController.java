@@ -7,12 +7,10 @@ import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -25,41 +23,27 @@ public class TodoListController {
     @Autowired
     LoginService loginService;
 
-//    @GetMapping
-//    public Page<Todo> getTodoList(Pageable pageable) {
-//        return toDoService.getTodoList(pageable);
-//    }
-
     @GetMapping
-    public List<Todo> getTodoListByUserId(@RequestHeader String sessionId) {
-        User user = loginService.getUserByAuthentication(sessionId);
-        return toDoService.getTodoListByUserId(user);
-    }
-
-    @GetMapping(value = "/page/{page}/pageSize/{pageSize}")
-    public Page<Todo> getTodoListPage(@PathVariable Integer page, @PathVariable Integer pageSize) {
-        Pageable pageable = new PageRequest(page - 1, pageSize);
-        return toDoService.getTodoPage(pageable);
+    public List<Todo> getTodoListByUser(Pageable pageable) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return toDoService.getTodoListByUser(user, pageable);
     }
 
     @GetMapping(value = "/{id}")
     public Todo getTodoById(@PathVariable(value = "id") Long id) {
-        return toDoService.getTodoById(id);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return toDoService.getTodoByUserAndId(user, id);
     }
 
     @GetMapping(value = "/tagValue/{tagValue}")
     public List<Todo> getTodoByTagValue(@PathVariable(value = "tagValue") String value) {
-        return toDoService.getByTodoTagValue(value);
-    }
-
-    @PostMapping(value = "/tags")
-    public List<Todo> getTodoByTags(@RequestBody List<String> values) {
-        return toDoService.getByTodoTagIn(new HashSet<>(values));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return toDoService.getByTodoTagValue(user, value);
     }
 
     @PostMapping
-    public Todo addTodo(@RequestBody Todo todo, @RequestHeader String sessionId) {
-        User user = loginService.getUserByAuthentication(sessionId);
+    public Todo addTodo(@RequestBody Todo todo) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         todo.setUser(user);
         return toDoService.saveOrUpdate(todo);
     }
