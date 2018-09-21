@@ -4,11 +4,13 @@ import com.google.common.base.Strings;
 import com.thoughtworks.restful.restful.model.Tag;
 import com.thoughtworks.restful.restful.model.TagCriteria;
 import com.thoughtworks.restful.restful.model.Todo;
+import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.repository.TagRepository;
 import com.thoughtworks.restful.restful.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -23,23 +25,24 @@ public class TodoService {
     @Autowired
     TagRepository tagRepository;
 
-    public List<Todo> getTodoListByUserId(Long id, Pageable pageable) {
-        return todoRepository.findByUser_Id(id, pageable);
+    public List<Todo> getTodoListByUserId(Pageable pageable) {
+        return todoRepository.findByUser_Id(getPrincipal().getId(), pageable);
     }
 
-    public Todo getTodoByUserIdAndId(Long userId, Long id) {
-        return todoRepository.findByUser_IdAndId(userId, id);
+    public Todo getTodoByUserIdAndId(Long id) {
+        return todoRepository.findByUser_IdAndId(getPrincipal().getId(), id);
     }
 
     public Todo getTodoById(Long id) {
         return todoRepository.findOne(id);
     }
 
-    public List<Todo> getTodoListByTodoTagValue(Long id, String value) {
-        return todoRepository.findByUser_IdAndTags_Value(id, value);
+    public List<Todo> getTodoListByTodoTagValue(String value) {
+        return todoRepository.findByUser_IdAndTags_Value(getPrincipal().getId(), value);
     }
 
     public Todo saveOrUpdate(Todo toDo) {
+        toDo.setUser(getPrincipal());
         Set<Tag> tags = new HashSet<>();
         for (Tag tag : toDo.getTags()) {
             Tag item = tagRepository.findByLabel(tag.getLabel());
@@ -53,7 +56,7 @@ public class TodoService {
         todoRepository.delete(id);
     }
 
-    public List<Todo> getTodoListByTagsAndDate(TagCriteria tagCriteria, Long userId) {
+    public List<Todo> getTodoListByTagsAndDate(TagCriteria tagCriteria) {
         return todoRepository.findAll((root, query, cb) -> {
             List<Predicate> predicatesList = new ArrayList<>();
             if (!Strings.isNullOrEmpty(tagCriteria.getName())) {
@@ -75,11 +78,16 @@ public class TodoService {
                     predicatesList.add(cb.isMember(tag, root.get("tags")));
                 }
             }
-            Predicate userPredicate = cb.equal(root.get("user").get("id"), userId);
+            Predicate userPredicate = cb.equal(root.get("user").get("id"), getPrincipal().getId());
             predicatesList.add(userPredicate);
 
             Predicate[] predicates = new Predicate[predicatesList.size()];
             return cb.and(predicatesList.toArray(predicates));
         }, new Sort(new Sort.Order(Sort.Direction.DESC,"date")));
+    }
+
+
+    private User getPrincipal() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
