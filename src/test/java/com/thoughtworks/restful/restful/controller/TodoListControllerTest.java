@@ -9,10 +9,14 @@
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+//import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.boot.test.mock.mockito.MockBean;
+//import org.springframework.context.annotation.Import;
 //import org.springframework.http.MediaType;
+//import org.springframework.security.access.SecurityConfig;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 //import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.test.context.support.WithMockUser;
 //import org.springframework.test.context.junit4.SpringRunner;
 //import org.springframework.test.web.servlet.MockMvc;
 //
@@ -35,12 +39,6 @@
 //    @MockBean
 //    private TodoService toDoService;
 //
-//    @Before
-//    public void setUp() throws Exception {
-//        SecurityContextHolder.getContext().setAuthentication(
-//                new UsernamePasswordAuthenticationToken(testUser.getLogin(), testUser.getPassword()));
-//    }
-//
 //    //    @Test
 ////    public void getTodoList() throws Exception {
 ////        Todo todo = new Todo(1l, "wjh", "finished", new Date());
@@ -59,6 +57,7 @@
 ////    }
 //
 //    @Test
+//    @WithMockUser
 //    public void getTodoById() throws Exception {
 //        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 //

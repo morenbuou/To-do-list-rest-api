@@ -7,6 +7,7 @@ import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
 import com.thoughtworks.restful.restful.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +38,8 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody User user) throws NotFoundException, ForbiddenException {
-        String sessionId = doLogin(user);
-        return ResponseEntity.ok().header("sessionId", sessionId).build();
+        String jwtToken = doLogin(user);
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwtToken).build();
     }
 
     private String doLogin(User user) throws NotFoundException, ForbiddenException {

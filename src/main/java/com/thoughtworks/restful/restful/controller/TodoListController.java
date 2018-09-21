@@ -5,7 +5,6 @@ import com.thoughtworks.restful.restful.controller.Exception.ForbiddenException;
 import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
 import com.thoughtworks.restful.restful.model.TagCriteria;
 import com.thoughtworks.restful.restful.model.Todo;
-import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +18,6 @@ public class TodoListController {
 
     @Autowired
     TodoService toDoService;
-
-    @Autowired
-    LoginService loginService;
 
     @GetMapping
     public List<Todo> getTodoListByUserId(Pageable pageable) {
