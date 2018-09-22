@@ -13,9 +13,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class LoginFilter extends OncePerRequestFilter {
@@ -25,7 +27,11 @@ public class LoginFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authorization = request.getCookies() != null ? Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals(HttpHeaders.AUTHORIZATION))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null) : null;
         if (!Strings.isNullOrEmpty(authorization)) {
             User user = loginService.getUserByAuthentication(authorization);
             if (user == null) {

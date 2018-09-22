@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 public class UserController {
 
@@ -37,9 +40,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody User user) throws NotFoundException, ForbiddenException {
+    public ResponseEntity login(HttpServletResponse response, @RequestBody User user) throws NotFoundException, ForbiddenException {
         String jwtToken = doLogin(user);
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwtToken).build();
+        response.addCookie(new Cookie(HttpHeaders.AUTHORIZATION, jwtToken));
+        return ResponseEntity.ok().build();
     }
 
     private String doLogin(User user) throws NotFoundException, ForbiddenException {
