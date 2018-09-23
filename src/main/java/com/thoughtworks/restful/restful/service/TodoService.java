@@ -42,11 +42,12 @@ public class TodoService {
     }
 
     public Todo saveOrUpdate(Todo toDo) {
-        toDo.setUser(getPrincipal());
+        User user = getPrincipal();
+        toDo.setUser(user);
         Set<Tag> tags = new HashSet<>();
         for (Tag tag : toDo.getTags()) {
-            Tag item = tagRepository.findByLabel(tag.getLabel());
-            tags.add(item != null ? item : tag);
+            Tag item = tagRepository.findByLabelAndUser_Id(tag.getLabel(), user.getId());
+            tags.add(item != null ? item.setUser(user) : tag.setUser(user));
         }
         toDo.setTags(tags);
         return todoRepository.save(toDo);

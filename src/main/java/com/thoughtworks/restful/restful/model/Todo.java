@@ -30,7 +30,7 @@ public class Todo {
     private String status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date date;
 
     @ManyToMany(cascade = {CascadeType.ALL})
