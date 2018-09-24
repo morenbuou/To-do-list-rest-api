@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,10 +49,11 @@ public class UserController {
 
     private String doLogin(User user) throws NotFoundException, ForbiddenException {
         User existUser = userService.getUserByName(user.getUsername());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (existUser == null) {
             throw new NotFoundException();
         }
-        if (!existUser.getPassword().equals(user.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(user.getPassword(), existUser.getPassword())) {
             throw new ForbiddenException();
         }
         return loginService.generateAuthentication(existUser);
