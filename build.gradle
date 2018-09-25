@@ -22,6 +22,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    springCloudVersion = 'Edgware.SR4'
+}
+
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -29,10 +33,17 @@ dependencies {
     compile('org.projectlombok:lombok')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.security:spring-security-test')
+    compile('org.springframework.cloud:spring-cloud-starter-feign')
     compile 'javax.xml.bind:jaxb-api:2.3.0'
     compile group: 'com.google.guava', name: 'guava', version: 'r05'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     runtime('mysql:mysql-connector-java')
     testRuntime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }

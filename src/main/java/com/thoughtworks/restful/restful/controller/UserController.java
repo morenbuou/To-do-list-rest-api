@@ -1,7 +1,7 @@
 package com.thoughtworks.restful.restful.controller;
 
-import com.thoughtworks.restful.restful.controller.Exception.ForbiddenException;
-import com.thoughtworks.restful.restful.controller.Exception.NotFoundException;
+import com.thoughtworks.restful.restful.controller.exception.ForbiddenException;
+import com.thoughtworks.restful.restful.controller.exception.NotFoundException;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.LoginService;
 import com.thoughtworks.restful.restful.service.TodoService;
