@@ -41,9 +41,8 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void getTodoList() throws Exception {
-            Todo todo = new Todo(1l, "todo", "to do", new Date(), new HashSet<>(), new User());
-            Todo todoNew = new Todo(2l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
+        Todo todo = new Todo(1l, "todo", "to do", new Date(), new HashSet<>(), new User());
+        Todo todoNew = new Todo(2l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
 
         List<Todo> todoList = Arrays.asList(todo, todoNew);
 
