@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificationExecutor<Todo> {
 
-    Todo findByUser_IdAndId(Long userId, Long id);
+    Todo findByUserIdAndId(Long userId, Long id);
 
     List<Todo> findByName(String name);
 
-    List<Todo> findByUser_IdAndTags_Value(Long userId, String value);
+    List<Todo> findByUserIdAndTags_Value(Long userId, String value);
 
-    List<Todo> findByUser_Id(Long id, Pageable pageable);
+    List<Todo> findByUserId(Long id, Pageable pageable);
 
 }

@@ -21,9 +21,5 @@ public class Tag {
     private long id;
     private String label;
     private String value;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    private long userId;
 }

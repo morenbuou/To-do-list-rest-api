@@ -16,6 +16,6 @@ public class TagService {
 
     public List<Tag> getTagList() {
         User user = User.getPrinciple();
-        return tagRepository.findByUser_IdOrderById(user.getId());
+        return tagRepository.findByUserIdOrderById(user.getId());
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.service.TodoService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,16 @@ public class TodoListControllerTest {
     @MockBean
     private TodoService toDoService;
 
+    Todo todoNew;
+    @Before
+    public void setUp() throws Exception {
+        todoNew = new Todo(2l, "todoNew", "to do", new Date(), new HashSet<>(), 1l);
+    }
+
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void getTodoList() throws Exception {
-        Todo todo = new Todo(1l, "todo", "to do", new Date(), new HashSet<>(), new User());
-        Todo todoNew = new Todo(2l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
+        Todo todo = new Todo(1l, "todo", "to do", new Date(), new HashSet<>(), 1l);
 
         List<Todo> todoList = Arrays.asList(todo, todoNew);
 
@@ -59,8 +65,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void getTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         given(toDoService.getTodoByUserIdAndId(todoNew.getId())).willReturn(todoNew);
 
         mvc.perform(
@@ -73,8 +77,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void addTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         given(toDoService.saveOrUpdate(any())).willReturn(todoNew);
 
         mvc.perform(
@@ -90,8 +92,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void updateTodo() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         given(toDoService.getTodoById(todoNew.getId())).willReturn(todoNew);
         given(toDoService.saveOrUpdate(todoNew)).willReturn(todoNew);
 
@@ -109,8 +109,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void test_update_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 
         mvc.perform(
@@ -126,8 +124,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void deleteTodoById() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(todoNew);
         doNothing().when(toDoService).delete(todoNew.getId());
 
@@ -143,8 +139,6 @@ public class TodoListControllerTest {
     @Test
     @WithMockUser(username = "user1", password = "pwd", roles = "USER")
     public void test_delete_todo_fail_404_not_found() throws Exception {
-        Todo todoNew = new Todo(1l, "todoNew", "to do", new Date(), new HashSet<>(), new User());
-
         when(toDoService.getTodoById(todoNew.getId())).thenReturn(null);
 
         mvc.perform(

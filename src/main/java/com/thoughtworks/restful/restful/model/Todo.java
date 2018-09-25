@@ -38,10 +38,6 @@ public class Todo {
             joinColumns = @JoinColumn(name = "todo_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    private long userId;
 
 }

@@ -26,11 +26,11 @@ public class TodoService {
     TagRepository tagRepository;
 
     public List<Todo> getTodoListByUserId(Pageable pageable) {
-        return todoRepository.findByUser_Id(getPrincipal().getId(), pageable);
+        return todoRepository.findByUserId(getPrincipal().getId(), pageable);
     }
 
     public Todo getTodoByUserIdAndId(Long id) {
-        return todoRepository.findByUser_IdAndId(getPrincipal().getId(), id);
+        return todoRepository.findByUserIdAndId(getPrincipal().getId(), id);
     }
 
     public Todo getTodoById(Long id) {
@@ -38,16 +38,16 @@ public class TodoService {
     }
 
     public List<Todo> getTodoListByTodoTagValue(String value) {
-        return todoRepository.findByUser_IdAndTags_Value(getPrincipal().getId(), value);
+        return todoRepository.findByUserIdAndTags_Value(getPrincipal().getId(), value);
     }
 
     public Todo saveOrUpdate(Todo toDo) {
         User user = getPrincipal();
-        toDo.setUser(user);
+        toDo.setUserId(user.getId());
         Set<Tag> tags = new HashSet<>();
         for (Tag tag : toDo.getTags()) {
-            Tag item = tagRepository.findByLabelAndUser_Id(tag.getLabel(), user.getId());
-            tags.add(item != null ? item.setUser(user) : tag.setUser(user));
+            Tag item = tagRepository.findByLabelAndUserId(tag.getLabel(), user.getId());
+            tags.add(item != null ? item.setUserId(user.getId()) : tag.setUserId(user.getId()));
         }
         toDo.setTags(tags);
         return todoRepository.save(toDo);
@@ -79,7 +79,7 @@ public class TodoService {
                     predicatesList.add(cb.isMember(tag, root.get("tags")));
                 }
             }
-            Predicate userPredicate = cb.equal(root.get("user").get("id"), getPrincipal().getId());
+            Predicate userPredicate = cb.equal(root.get("userId"), getPrincipal().getId());
             predicatesList.add(userPredicate);
 
             Predicate[] predicates = new Predicate[predicatesList.size()];
