@@ -1,0 +1,9 @@
+#spring:
+#  application:
+#    name: userService
+#  profiles:
+#    active: dev
+#  cloud:
+#    config:
+#      label: master
+#      uri: http://localhost:8888
