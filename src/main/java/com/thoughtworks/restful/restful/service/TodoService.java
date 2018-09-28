@@ -1,12 +1,14 @@
 package com.thoughtworks.restful.restful.service;
 
 import com.google.common.base.Strings;
+import com.thoughtworks.restful.restful.client.TranslateClient;
 import com.thoughtworks.restful.restful.model.Tag;
 import com.thoughtworks.restful.restful.model.TagCriteria;
 import com.thoughtworks.restful.restful.model.Todo;
 import com.thoughtworks.restful.restful.model.User;
 import com.thoughtworks.restful.restful.repository.TagRepository;
 import com.thoughtworks.restful.restful.repository.TodoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,8 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+@Slf4j
 @Service
 public class TodoService {
 
@@ -25,12 +31,19 @@ public class TodoService {
     @Autowired
     TagRepository tagRepository;
 
+    @Autowired
+    TranslateClient translateClient;
+
+    @Autowired
+    TranslateService translateService;
+
     public List<Todo> getTodoListByUserId(Pageable pageable) {
         return todoRepository.findByUserId(getPrincipal().getId(), pageable);
     }
 
     public Todo getTodoByUserIdAndId(Long id) {
-        return todoRepository.findByUserIdAndId(getPrincipal().getId(), id);
+        Todo todo = todoRepository.findByUserIdAndId(getPrincipal().getId(), id);
+        return  translateService.translate(todo);
     }
 
     public Todo getTodoById(Long id) {

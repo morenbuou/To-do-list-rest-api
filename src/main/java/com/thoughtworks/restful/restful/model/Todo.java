@@ -29,6 +29,9 @@ public class Todo {
     private String name;
     private String status;
 
+    @Transient
+    private String translation;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date date;
