@@ -5,7 +5,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "user-service", url = "localhost:8080/api")
+@FeignClient(name = "userService")
 public interface UserClient {
 
     @GetMapping("/users/authentication")

@@ -1,0 +1,7 @@
+spring:
+  config:
+    name: ${spring.application.name}
+    location: ../config/
+  cloud:
+    config:
+      enabled: false

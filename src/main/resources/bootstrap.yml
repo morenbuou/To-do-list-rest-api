@@ -1,9 +1,10 @@
-#spring:
-#  application:
-#    name: todoService
-#  profiles:
-#    active: dev
-#  cloud:
-#    config:
-#      label: master
-#      uri: http://localhost:8888
+spring:
+  application:
+    name: todoService
+  profiles:
+    active: dev
+  cloud:
+    config:
+      label: master
+      uri: http://localhost:8888
+      fail-fast: false
